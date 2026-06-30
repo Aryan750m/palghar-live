@@ -142,6 +142,10 @@ $mockPhotos = [
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Palghar LIVE - The Strong Voice of the Common People | Palghar Live News Portal</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/jpeg" href="assets/images/WhatsApp Image 2026-06-29 at 2.29.31 PM.jpeg">
+    <link rel="shortcut icon" type="image/jpeg" href="assets/images/WhatsApp Image 2026-06-29 at 2.29.31 PM.jpeg">
+    <link rel="apple-touch-icon" href="assets/images/WhatsApp Image 2026-06-29 at 2.29.31 PM.jpeg">
     <!-- SEO Meta Tags -->
     <meta name="description" content="Palghar district's fastest and most trusted digital news portal. Get local updates, monsoon forecasts, sports championships, and political news live.">
     <meta name="keywords" content="Palghar News, Palghar Live, Palghar Updates, Jawhar, Dahanu, Wada, Boisar, Vasai, Local News Maharashtra">
@@ -195,7 +199,10 @@ $mockPhotos = [
         <div class="ticker-wrap">
             <div class="ticker-move" id="breaking-ticker-content">
                 <?php foreach ($tickerNews as $tick): ?>
-                    <div class="ticker-item"><a href="news-detail.php?id=<?php echo $tick['id']; ?>" style="color:#fff; text-decoration:none;"><?php echo sanitize($tick['title']); ?></a></div>
+                    <div class="ticker-item"><a href="news-detail.php?id=<?php echo $tick['id']; ?>" style="color:inherit; text-decoration:none;"><?php echo sanitize($tick['title']); ?></a></div>
+                <?php endforeach; ?>
+                <?php /* Duplicate for seamless infinite scroll loop */ foreach ($tickerNews as $tick): ?>
+                    <div class="ticker-item"><a href="news-detail.php?id=<?php echo $tick['id']; ?>" style="color:inherit; text-decoration:none;"><?php echo sanitize($tick['title']); ?></a></div>
                 <?php endforeach; ?>
             </div>
         </div>

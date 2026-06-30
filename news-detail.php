@@ -87,6 +87,9 @@ try {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo $article ? sanitize($article['title']) . ' - Palghar LIVE' : 'News Details - Palghar LIVE'; ?></title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/jpeg" href="assets/images/WhatsApp Image 2026-06-29 at 2.29.31 PM.jpeg">
+    <link rel="shortcut icon" type="image/jpeg" href="assets/images/WhatsApp Image 2026-06-29 at 2.29.31 PM.jpeg">
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Core Stylesheet -->
