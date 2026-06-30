@@ -53,9 +53,9 @@ class SEOManager {
         $ogImage = $ogImage ?: self::$config['default_og_image'];
         
         // Absolute OG Image URL check
-        if (!str_starts_with($ogImage, 'http')) {
+        if (!empty($ogImage) && !str_starts_with($ogImage, 'http')) {
             $configApp = require __DIR__ . '/../Config/app.php';
-            $ogImage = rtrim($configApp['url'] ?? 'https://palghar-live.onrender.com', '/') . '/' . ltrim($ogImage, '/');
+            $ogImage = rtrim($configApp['url'] ?? 'https://palghar-live.onrender.com', '/') . '/' . ltrim((string)$ogImage, '/');
         }
         
         $canonical = self::getCanonicalUrl();
@@ -142,17 +142,20 @@ class SEOManager {
             case 'NewsArticle':
                 $configApp = require __DIR__ . '/../Config/app.php';
                 $baseUrl = $configApp['url'] ?? 'https://palghar-live.onrender.com';
-                $imageUrl = str_starts_with($data['image'], 'http') ? $data['image'] : rtrim($baseUrl, '/') . '/' . ltrim($data['image'], '/');
+                $rawImage = $data['image_path'] ?? $data['image'] ?? '';
+                $imageUrl = (!empty($rawImage) && str_starts_with($rawImage, 'http'))
+                    ? $rawImage
+                    : rtrim($baseUrl, '/') . '/' . ltrim((string)$rawImage, '/');
                 
                 $schema = array_merge($schema, [
                     '@type' => 'NewsArticle',
-                    'headline' => $data['title'],
+                    'headline' => $data['title'] ?? '',
                     'image' => [$imageUrl],
-                    'datePublished' => date('c', strtotime($data['date_published'])),
-                    'dateModified' => date('c', strtotime($data['date_published'])),
+                    'datePublished' => date('c', strtotime($data['date_published'] ?? 'now')),
+                    'dateModified' => date('c', strtotime($data['date_published'] ?? 'now')),
                     'author' => [
                         '@type' => 'Person',
-                        'name' => $data['author'],
+                        'name' => $data['author'] ?? 'Staff Reporter',
                         'jobTitle' => 'Journalist'
                     ],
                     'publisher' => [
@@ -163,7 +166,7 @@ class SEOManager {
                             'url' => self::$config['organisation']['logo']
                         ]
                     ],
-                    'description' => $data['summary']
+                    'description' => $data['summary'] ?? ''
                 ]);
                 break;
         }
