@@ -16,7 +16,8 @@ RUN sed -i 's/AllowOverride None/AllowOverride All/g' /etc/apache2/apache2.conf
 COPY . /var/www/html/
 
 # Set proper permissions
-RUN chown -R www-data:www-data /var/www/html \
+RUN mkdir -p /var/www/html/uploads \
+    && chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html \
     && chmod -R 775 /var/www/html/uploads
 
