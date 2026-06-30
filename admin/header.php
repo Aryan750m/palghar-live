@@ -12,28 +12,26 @@ if (!isset($_SESSION['palghar_live_admin_session']) || $_SESSION['palghar_live_a
     exit;
 }
 
-require_once '../config/db.php';
-require_once '../includes/functions.php';
+require_once __DIR__ . '/../app/autoload.php';
 
-$db = getDatabaseConnection();
-$adminUser = $_SESSION['palghar_live_admin_username'];
-$adminRole = $_SESSION['palghar_live_admin_role'];
+$adminUser = $_SESSION['palghar_live_admin_username'] ?? 'Unknown';
+$adminRole = $_SESSION['palghar_live_admin_role'] ?? 'editor';
 
 // Fetch quick stats count
 try {
-    $statArticles = $db->query("SELECT COUNT(*) FROM news")->fetchColumn();
-    $statComments = $db->query("SELECT COUNT(*) FROM comments")->fetchColumn();
-    $statInquiries = $db->query("SELECT COUNT(*) FROM inquiries")->fetchColumn();
-} catch (PDOException $e) {
-    $statArticles = 0;
-    $statComments = 0;
-    $statInquiries = 0;
+    $statArticles  = \App\Database::fetch("SELECT COUNT(*) as c FROM news")['c'] ?? 0;
+    $statComments  = \App\Database::fetch("SELECT COUNT(*) as c FROM comments")['c'] ?? 0;
+    $statInquiries = \App\Database::fetch("SELECT COUNT(*) as c FROM inquiries")['c'] ?? 0;
+} catch (Exception $e) {
+    $statArticles = $statComments = $statInquiries = 0;
 }
 
 // Helper to check active navigation link
-function isPageActive($fileName) {
-    $current = basename($_SERVER['PHP_SELF']);
-    return $current === $fileName ? 'active' : '';
+if (!function_exists('isPageActive')) {
+    function isPageActive($fileName) {
+        $current = basename($_SERVER['PHP_SELF']);
+        return $current === $fileName ? 'active' : '';
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -47,8 +45,8 @@ function isPageActive($fileName) {
     <link rel="shortcut icon" type="image/jpeg" href="../assets/images/WhatsApp Image 2026-06-29 at 2.29.31 PM.jpeg">
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Core Stylesheet -->
-    <link rel="stylesheet" href="../assets/css/style.css?v=2">
+    <!-- Production CSS Bundle -->
+    <link rel="stylesheet" href="../assets/css/style.min.css?v=<?php echo file_exists('../assets/css/style.min.css') ? filemtime('../assets/css/style.min.css') : time(); ?>">
 </head>
 <body>
 
@@ -104,6 +102,7 @@ function isPageActive($fileName) {
             <a href="sections.php" class="admin-tab-btn <?php echo isPageActive('sections.php'); ?>" style="text-decoration:none;"><i class="fas fa-images"></i> Manage Sections</a>
             <?php if ($adminRole === 'admin'): ?>
                 <a href="users.php" class="admin-tab-btn <?php echo isPageActive('users.php'); ?>" style="text-decoration:none;"><i class="fas fa-users-cog"></i> User Management</a>
+                <a href="health.php" class="admin-tab-btn <?php echo isPageActive('health.php'); ?>" style="text-decoration:none;"><i class="fas fa-stethoscope"></i> Health Monitor</a>
             <?php endif; ?>
-            <a href="settings.php" class="admin-tab-btn <?php echo isPageActive('settings.php'); ?>" style="text-decoration:none;"><i class="fas fa-sliders"></i> Settings & Logs</a>
+            <a href="settings.php" class="admin-tab-btn <?php echo isPageActive('settings.php'); ?>" style="text-decoration:none;"><i class="fas fa-sliders"></i> Settings &amp; Logs</a>
         </div>

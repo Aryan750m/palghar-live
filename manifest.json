@@ -1,0 +1,22 @@
+{
+  "name": "Palghar LIVE News",
+  "short_name": "Palghar LIVE",
+  "description": "The Strong Voice of the Common People - News Portal",
+  "start_url": "/index.php",
+  "display": "standalone",
+  "background_color": "#0B192C",
+  "theme_color": "#E31B23",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/assets/images/WhatsApp Image 2026-06-29 at 2.29.31 PM.jpeg",
+      "sizes": "192x192",
+      "type": "image/jpeg"
+    },
+    {
+      "src": "/assets/images/WhatsApp Image 2026-06-29 at 2.29.39 PM.jpeg",
+      "sizes": "512x512",
+      "type": "image/jpeg"
+    }
+  ]
+}

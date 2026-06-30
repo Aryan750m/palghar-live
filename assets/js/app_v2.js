@@ -1,109 +1,180 @@
-// Palghar LIVE Portal Core UI Animations and Widgets (Phase 1)
-// Contains strictly visual micro-interactions, dark themes, and lightbox zooms.
-// Direct database query listings and form postbacks are server-side PHP driven.
+// assets/js/app_v2.js
+// Core visual operations, theme triggers, PWA registrations, and scroll helpers
 
-const THEME_STORAGE_KEY = 'palghar_live_theme';
-
-// =========================================================================
-// 1. Theme Management (Persistent across requests)
-// =========================================================================
-function initTheme() {
-    const savedTheme = localStorage.getItem(THEME_STORAGE_KEY) || 'light';
-    document.body.setAttribute('data-theme', savedTheme);
-    updateThemeIcon(savedTheme);
-}
-
-function toggleTheme() {
-    const currentTheme = document.body.getAttribute('data-theme') || 'light';
-    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-    document.body.setAttribute('data-theme', newTheme);
-    localStorage.setItem(THEME_STORAGE_KEY, newTheme);
-    updateThemeIcon(newTheme);
-    showToast(`Theme updated: ${newTheme === 'dark' ? 'Dark Mode' : 'Light Mode'}`);
-}
-
-function updateThemeIcon(theme) {
-    const btn = document.getElementById('theme-toggle');
-    if (btn) {
-        btn.innerHTML = theme === 'dark' ? '☀️' : '🌙';
-    }
-}
-
-// =========================================================================
-// 2. Weather & Date Widgets (English)
-// =========================================================================
-function initHeaderWidgets() {
-    const dateEl = document.getElementById('current-date');
-    if (dateEl) {
-        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-        dateEl.innerHTML = `<i class="far fa-calendar-alt"></i> ${new Date().toLocaleDateString('en-US', options)}`;
-    }
+document.addEventListener('DOMContentLoaded', () => {
+    // 1. Initialise theme preferences
+    initThemeManager();
     
-    const tempEl = document.getElementById('weather-temp');
-    if (tempEl) {
-        const temp = 28 + Math.floor(Math.random() * 5);
-        tempEl.textContent = `${temp}°C`;
-    }
-}
+    // 2. Setup header calendar and date updates
+    setupHeaderDateTime();
+    
+    // 3. Mobile menu drawer listeners
+    setupMobileMenuDrawer();
+    
+    // 4. Image lightbox gallery overlay viewer
+    setupImageLightbox();
+    
+    // 5. Scroll-to-top FAB action
+    setupScrollToTop();
+    
+    // 6. Register PWA Service Worker
+    registerServiceWorker();
+});
 
-// =========================================================================
-// 3. Mobile Menu drawer drawer drawer
-// =========================================================================
-function setupMobileMenu() {
-    const menuBtn = document.getElementById('mobile-menu-toggle');
-    const navLinks = document.getElementById('nav-links-menu');
-    if (menuBtn && navLinks) {
-        menuBtn.addEventListener('click', () => {
-            navLinks.classList.toggle('active');
-            menuBtn.innerHTML = navLinks.classList.contains('active') ? '✕' : '☰';
-        });
-        
-        document.addEventListener('click', (e) => {
-            if (!menuBtn.contains(e.target) && !navLinks.contains(e.target)) {
-                navLinks.classList.remove('active');
-                menuBtn.innerHTML = '☰';
+// Theme Management System
+function initThemeManager() {
+    const themeToggleBtn = document.getElementById('theme-toggle');
+    const cookieName = 'theme_preference';
+    
+    let currentTheme = getCookie(cookieName) || 'system';
+    
+    applyTheme(currentTheme);
+    
+    if (themeToggleBtn) {
+        themeToggleBtn.addEventListener('click', () => {
+            let nextTheme = 'light';
+            if (currentTheme === 'light') {
+                nextTheme = 'dark';
+            } else if (currentTheme === 'dark') {
+                nextTheme = 'system';
+            }
+            
+            currentTheme = nextTheme;
+            setCookie(cookieName, nextTheme, 365);
+            applyTheme(nextTheme);
+            
+            let label = 'System preference';
+            if (nextTheme === 'light') label = 'Light theme';
+            if (nextTheme === 'dark') label = 'Dark theme';
+            
+            if (typeof showToast === 'function') {
+                showToast(`Theme changed to: ${label}`, 'info');
             }
         });
     }
 }
 
-// =========================================================================
-// 4. Toast notifications manager
-// =========================================================================
-function showToast(message, isSuccess = true) {
-    let container = document.querySelector('.toast-container');
-    if (!container) {
-        container = document.createElement('div');
-        container.className = 'toast-container';
-        document.body.appendChild(container);
+function applyTheme(theme) {
+    const btn = document.getElementById('theme-toggle');
+    if (theme === 'system') {
+        document.body.setAttribute('data-theme-mode', 'system');
+        document.body.removeAttribute('data-theme');
+        if (btn) btn.innerHTML = '<i class="fas fa-desktop"></i>';
+    } else {
+        document.body.setAttribute('data-theme-mode', 'fixed');
+        document.body.setAttribute('data-theme', theme);
+        if (btn) btn.innerHTML = theme === 'dark' ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
     }
-    
-    const toast = document.createElement('div');
-    toast.className = 'toast';
-    toast.style.borderLeftColor = isSuccess ? '#25D366' : '#E31B23';
-    toast.innerHTML = `<span style="font-size: 1.2rem;">${isSuccess ? '✓' : '✗'}</span> <span>${message}</span>`;
-    
-    container.appendChild(toast);
-    
-    setTimeout(() => {
-        toast.remove();
-        if (container.children.length === 0) {
-            container.remove();
-        }
-    }, 4000);
 }
 
-// =========================================================================
-// 5. Category Helpers
-// =========================================================================
-function getCategoryLabel(catId) {
-    switch (catId) {
-        case 'local': return 'Palghar Local';
-        case 'state': return 'Maharashtra';
-        case 'national': return 'National';
-        case 'sports': return 'Sports';
-        case 'business': return 'Business';
-        case 'culture': return 'Art & Culture';
-        default: return catId;
+// DateTime Widget Helper
+function setupHeaderDateTime() {
+    const dateContainer = document.getElementById('current-date');
+    if (dateContainer) {
+        const fmt = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        dateContainer.innerHTML = `<i class="far fa-calendar-alt"></i> ${new Date().toLocaleDateString('en-US', fmt)}`;
     }
+}
+
+// Mobile navigation links toggle
+function setupMobileMenuDrawer() {
+    const trigger = document.getElementById('mobile-menu-toggle');
+    const drawer = document.getElementById('nav-links-menu');
+    
+    if (trigger && drawer) {
+        trigger.addEventListener('click', () => {
+            drawer.classList.toggle('active');
+            trigger.innerHTML = drawer.classList.contains('active') ? '✕' : '☰';
+        });
+        
+        // Hide if clicking outside drawer
+        document.addEventListener('click', (e) => {
+            if (!trigger.contains(e.target) && !drawer.contains(e.target)) {
+                drawer.classList.remove('active');
+                trigger.innerHTML = '☰';
+            }
+        });
+    }
+}
+
+// Global Image Zoom Lightbox
+function setupImageLightbox() {
+    const modal = document.getElementById('image-lightbox-modal');
+    const modalImg = document.getElementById('lightbox-zoom-img');
+    const modalCaption = document.getElementById('lightbox-zoom-caption');
+    const closeBtn = document.getElementById('lightbox-close-btn');
+    
+    if (!modal || !modalImg) return;
+    
+    if (closeBtn) {
+        closeBtn.addEventListener('click', () => {
+            modal.style.display = 'none';
+            modal.setAttribute('aria-hidden', 'true');
+        });
+    }
+    
+    // Listen for image zoom clicks globally
+    document.body.addEventListener('click', (e) => {
+        const clickableImg = e.target.closest('.article-img-wrap img, .media-thumb img, .trending-item img, .section-static-banner img, .news-card-img');
+        if (clickableImg && !e.target.closest('.media-manager-item')) {
+            modal.style.display = 'flex';
+            modal.setAttribute('aria-hidden', 'false');
+            modalImg.src = clickableImg.src;
+            if (modalCaption) {
+                modalCaption.textContent = clickableImg.alt || 'Palghar LIVE Preview';
+            }
+        }
+    });
+}
+
+// Scroll to Top floating actions
+function setupScrollToTop() {
+    const btn = document.getElementById('scroll-to-top-btn');
+    if (!btn) return;
+    
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 300) {
+            btn.classList.add('show');
+        } else {
+            btn.classList.remove('show');
+        }
+    });
+    
+    btn.addEventListener('click', () => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    });
+}
+
+// Service Worker PWA registration
+function registerServiceWorker() {
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/service-worker.js')
+            .then(() => console.log('Palghar LIVE Service Worker registered.'))
+            .catch(err => console.log('SW registration failure:', err));
+    }
+}
+
+// Cookie Helper routines
+function setCookie(name, value, days) {
+    let expires = "";
+    if (days) {
+        let date = new Date();
+        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+        expires = "; expires=" + date.toUTCString();
+    }
+    document.cookie = name + "=" + (value || "")  + expires + "; path=/; SameSite=Lax";
+}
+
+function getCookie(name) {
+    let nameEQ = name + "=";
+    let ca = document.cookie.split(';');
+    for(let i=0;i < ca.length;i++) {
+        let c = ca[i];
+        while (c.charAt(0)==' ') c = c.substring(1,c.length);
+        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+    }
+    return null;
 }

@@ -1,0 +1,23 @@
+# Standardize line endings
+* text=auto
+
+# Declare files to always have LF line endings on checkout
+*.php text eol=lf
+*.js text eol=lf
+*.css text eol=lf
+*.json text eol=lf
+*.yaml text eol=lf
+*.yml text eol=lf
+*.sql text eol=lf
+.htaccess text eol=lf
+.gitignore text eol=lf
+.editorconfig text eol=lf
+
+# Denote binary files (do not normalize line endings)
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.webp binary
+*.avif binary
