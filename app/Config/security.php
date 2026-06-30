@@ -1,4 +1,5 @@
 <?php
+
 // Security Configuration: app/Config/security.php
 
 return [
@@ -7,7 +8,7 @@ return [
         'token_name' => 'csrf_token',
         'expiry' => 3600, // Token lifetime in seconds (1 hour)
     ],
-    
+
     // Rate Limiting settings (Window in seconds -> Max requests)
     'rate_limiting' => [
         'enabled' => true,
@@ -15,13 +16,13 @@ return [
         'max_requests' => 60, // Maximum 60 requests per minute for public endpoints
         'admin_max_requests' => 15, // Maximum 15 logins/modifications per minute
     ],
-    
+
     // Admin lockout configurations
     'lockout' => [
         'max_attempts' => 5,
         'duration' => 900, // 15 minutes in seconds
     ],
-    
+
     // Session configurations
     'session' => [
         'lifetime' => 1800, // 30 minutes in idle
@@ -29,7 +30,7 @@ return [
         'httponly' => true,
         'samesite' => 'Lax',
     ],
-    
+
     // Content Security Policy Directives
     'csp' => [
         'default-src' => "'self'",

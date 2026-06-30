@@ -1,13 +1,16 @@
 <?php
+
 // app/Helpers.php
 
 namespace App;
 
-class Helpers {
+class Helpers
+{
     /**
      * Prevent XSS by recursively sanitising output data
      */
-    public static function sanitize(mixed $data): mixed {
+    public static function sanitize(mixed $data): mixed
+    {
         if (is_array($data)) {
             return array_map([self::class, 'sanitize'], $data);
         }
@@ -20,8 +23,11 @@ class Helpers {
     /**
      * Format database timestamps into readable date format
      */
-    public static function formatDate(?string $dateString): string {
-        if (empty($dateString)) return '';
+    public static function formatDate(?string $dateString): string
+    {
+        if (empty($dateString)) {
+            return '';
+        }
         $timestamp = strtotime($dateString);
         return date("M d, Y, h:i A", $timestamp);
     }
@@ -29,7 +35,8 @@ class Helpers {
     /**
      * Map category code to human readable title
      */
-    public static function getCategoryLabel(string $catId): string {
+    public static function getCategoryLabel(string $catId): string
+    {
         $mapping = [
             'local' => 'Palghar Local',
             'state' => 'Maharashtra',
@@ -44,7 +51,8 @@ class Helpers {
     /**
      * Map category code to theme/color badges
      */
-    public static function getCategoryColor(string $catId): string {
+    public static function getCategoryColor(string $catId): string
+    {
         $mapping = [
             'local' => 'var(--primary)',
             'state' => '#f59e0b',     // Amber
@@ -59,14 +67,16 @@ class Helpers {
     /**
      * Retrieve mock dynamic weather value based on hour of the day
      */
-    public static function getWeatherTemp(): string {
+    public static function getWeatherTemp(): string
+    {
         return (28 + (date('H') % 5)) . "°C";
     }
 
     /**
      * Compute estimated reading time based on standard 200 words-per-minute
      */
-    public static function getReadingTime(string $text): string {
+    public static function getReadingTime(string $text): string
+    {
         $wordCount = str_word_count(strip_tags($text));
         $minutes = ceil($wordCount / 200);
         return $minutes . ' min read';

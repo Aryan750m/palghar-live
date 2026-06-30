@@ -1,4 +1,5 @@
 <?php
+
 // Database Configuration: app/Config/database.php
 
 return [

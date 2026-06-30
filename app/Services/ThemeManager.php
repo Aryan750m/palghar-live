@@ -1,13 +1,16 @@
 <?php
+
 // app/Services/ThemeManager.php
 
 namespace App\Services;
 
-class ThemeManager {
+class ThemeManager
+{
     /**
      * Get the active theme string from cookies, defaulting to 'system'
      */
-    public static function getActiveTheme(): string {
+    public static function getActiveTheme(): string
+    {
         $allowed = ['light', 'dark', 'system'];
         $theme = $_COOKIE['theme_preference'] ?? 'system';
         return in_array($theme, $allowed) ? $theme : 'system';
@@ -16,7 +19,8 @@ class ThemeManager {
     /**
      * Return body layout HTML attribute class based on active theme
      */
-    public static function getBodyThemeAttributes(): string {
+    public static function getBodyThemeAttributes(): string
+    {
         $theme = self::getActiveTheme();
         if ($theme === 'system') {
             return 'data-theme-mode="system"';

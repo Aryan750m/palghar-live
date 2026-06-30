@@ -1,4 +1,5 @@
 <?php
+
 // App Configuration: app/Config/app.php
 
 return [
@@ -8,7 +9,7 @@ return [
     'debug' => getenv('APP_DEBUG') === 'true' || getenv('APP_DEBUG') === '1',
     'env' => getenv('APP_ENV') ?: 'production',
     'url' => getenv('APP_URL') ?: 'https://palghar-live.onrender.com',
-    
+
     // Core directories
     'paths' => [
         'root' => dirname(__DIR__, 2),
