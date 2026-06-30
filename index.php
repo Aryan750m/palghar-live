@@ -185,7 +185,7 @@ $mockPhotos = [
             </div>
 
             <div class="header-actions">
-                <a href="https://www.youtube.com/channel/UCk9j0UpuC0RQqp2MW9c-Y6Q" target="_blank" class="btn-live">
+                <a href="https://www.youtube.com/@palgharlivenews" target="_blank" class="btn-live">
                     <span class="live-pulse"></span> Watch Live (YouTube)
                 </a>
             </div>
