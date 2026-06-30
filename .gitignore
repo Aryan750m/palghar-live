@@ -1,0 +1,25 @@
+# Lock file (security: prevents installer from being re-run)
+install.lock
+
+# Environment variables / secrets (never commit these)
+.env
+.env.local
+.env.production
+
+# Temp / debug files
+*.log
+check_tables.php
+run_install.php
+recreate_db.php
+
+# Uploaded media files (too large for git; manage separately)
+uploads/news/*
+uploads/sections/*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor / IDE
+.vscode/
+.idea/
