@@ -174,9 +174,9 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == 1) {
 
 // Static layouts mapping (Playlist bulletins)
 $mockVideos = [
-    ['id' => 'vid-1', 'title' => 'Monsoon Preparedness Meeting Chaired by Palghar District Collector', 'youtubeId' => 'GPd0niZQMme', 'duration' => '10:45', 'thumb' => 'https://images.unsplash.com/photo-1504608524841-42fe6f032b4b?auto=format&fit=crop&w=300&q=80'],
-    ['id' => 'vid-2', 'title' => 'Commuters Protest Over Severe Potholes on Palghar-Manor Highway', 'youtubeId' => 'd0niZQMmemX', 'duration' => '05:32', 'thumb' => 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=300&q=80'],
-    ['id' => 'vid-3', 'title' => 'Fishermen Boat Capsizes Near Dahanu Coast; All 6 Sailors Rescued Safely', 'youtubeId' => 'ZQMmemXHo7s', 'duration' => '07:15', 'thumb' => 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&w=300&q=80']
+    ['id' => 'vid-1', 'title' => '21 में 16 सीटों पर शानदार जीत, सहकार पैनल का दमदार प्रदर्शन; विरार में जश्न का माहौल', 'youtubeId' => 'vI5xPhJW2U8', 'duration' => '01:39', 'thumb' => 'https://img.youtube.com/vi/vI5xPhJW2U8/hqdefault.jpg'],
+    ['id' => 'vid-2', 'title' => 'विरार मुंबई कार्यकर्ताओं की मेहनत और जनता के भरोसे विरोधियों को मिला करारा जवाब', 'youtubeId' => 'mIkUkMwpqYo', 'duration' => '03:06', 'thumb' => 'https://img.youtube.com/vi/mIkUkMwpqYo/hqdefault.jpg'],
+    ['id' => 'vid-3', 'title' => 'खुद को सीनियर पुलिस अफसर बताकर ठगी करने वाला आरोपीं ट्रैप में गिरफ्तार #public #mumbai', 'youtubeId' => 'h3OOUOu1Oc8', 'duration' => '03:02', 'thumb' => 'https://img.youtube.com/vi/h3OOUOu1Oc8/hqdefault.jpg']
 ];
 
 $mockPhotos = [
@@ -203,12 +203,16 @@ $jsHash = file_exists('assets/js/app.min.js') ? filemtime('assets/js/app.min.js'
     <!-- Unified SEO Meta Tags -->
     <?php echo \App\Services\SEOManager::renderMetaTags($pageTitle, $pageDesc); ?>
     
+    <script nonce="<?php echo \App\Middleware\SecurityHeaders::getNonce(); ?>">
+        window.APP_URL = "<?php echo htmlspecialchars($configApp['url']); ?>";
+    </script>
+
     <!-- Favicon Links -->
-    <link rel="icon" type="image/jpeg" href="assets/images/WhatsApp Image 2026-06-29 at 2.29.31 PM.jpeg">
-    <link rel="shortcut icon" type="image/jpeg" href="assets/images/WhatsApp Image 2026-06-29 at 2.29.31 PM.jpeg">
+    <link rel="icon" type="image/jpeg" href="<?php echo htmlspecialchars($configApp['url']); ?>/assets/images/WhatsApp Image 2026-06-29 at 2.29.31 PM.jpeg">
+    <link rel="shortcut icon" type="image/jpeg" href="<?php echo htmlspecialchars($configApp['url']); ?>/assets/images/WhatsApp Image 2026-06-29 at 2.29.31 PM.jpeg">
     
     <!-- PWA Manifest -->
-    <link rel="manifest" href="manifest.json">
+    <link rel="manifest" href="<?php echo htmlspecialchars($configApp['url']); ?>/manifest.json">
     <meta name="theme-color" content="#E31B23">
     
     <!-- CDNs and Fonts Optimizations (preconnect headers) -->
@@ -217,11 +221,10 @@ $jsHash = file_exists('assets/js/app.min.js') ? filemtime('assets/js/app.min.js'
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     
     <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
-    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <!-- Production CSS bundles -->
-    <link rel="stylesheet" href="assets/css/style.min.css?v=<?php echo $cssHash; ?>">
+    <link rel="stylesheet" href="<?php echo htmlspecialchars($configApp['url']); ?>/assets/css/style.min.css?v=<?php echo $cssHash; ?>">
     
     <!-- Rich structured data models schemas -->
     <?php 
@@ -236,7 +239,7 @@ $jsHash = file_exists('assets/js/app.min.js') ? filemtime('assets/js/app.min.js'
     echo \App\Services\SEOManager::renderSchema('Breadcrumb', $crumbs);
     ?>
     <!-- Anti-FOUC: Apply theme immediately to prevent flash. Must be inline, before CSS. -->
-    <script>
+    <script nonce="<?php echo \App\Middleware\SecurityHeaders::getNonce(); ?>">
         (function(){
             function getCookieValue(name) {
                 var match = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
@@ -280,7 +283,7 @@ $jsHash = file_exists('assets/js/app.min.js') ? filemtime('assets/js/app.min.js'
         <div class="container header-content">
             <div class="logo-container">
                 <a href="index.php" style="display: flex; align-items: center; gap: 15px; text-decoration: none;" aria-label="Palghar LIVE homepage">
-                    <img src="assets/images/WhatsApp Image 2026-06-29 at 2.29.31 PM.jpeg" alt="Palghar LIVE logo" class="site-logo" onerror="this.src='https://via.placeholder.com/150x70?text=PALGHAR+LIVE'">
+                    <img src="<?php echo htmlspecialchars($configApp['url']); ?>/assets/images/WhatsApp Image 2026-06-29 at 2.29.31 PM.jpeg" alt="Palghar LIVE logo" class="site-logo" onerror="this.src='https://via.placeholder.com/150x70?text=PALGHAR+LIVE'">
                     <div class="brand-details">
                         <span class="brand-title" style="font-size: 2.2rem; font-weight:800; color:var(--secondary); display:block; line-height:1;">Palghar <span style="color:var(--primary);">LIVE</span></span>
                         <p class="brand-slogan">The Strong Voice of the Common People</p>
@@ -303,10 +306,10 @@ $jsHash = file_exists('assets/js/app.min.js') ? filemtime('assets/js/app.min.js'
         <div class="ticker-wrap">
             <div class="ticker-move" id="breaking-ticker-content">
                 <?php foreach ($tickerNews as $tick): ?>
-                    <div class="ticker-item"><a href="news-detail.php?id=<?php echo $tick['id']; ?>"><?php echo htmlspecialchars($tick['title']); ?></a></div>
+                    <div class="ticker-item"><a href="<?php echo \App\Helpers::getNewsUrl($tick['id'], $tick['title']); ?>"><?php echo htmlspecialchars($tick['title']); ?></a></div>
                 <?php endforeach; ?>
                 <?php /* Duplicate for seamless loop scrolling animation */ foreach ($tickerNews as $tick): ?>
-                    <div class="ticker-item"><a href="news-detail.php?id=<?php echo $tick['id']; ?>"><?php echo htmlspecialchars($tick['title']); ?></a></div>
+                    <div class="ticker-item"><a href="<?php echo \App\Helpers::getNewsUrl($tick['id'], $tick['title']); ?>"><?php echo htmlspecialchars($tick['title']); ?></a></div>
                 <?php endforeach; ?>
             </div>
         </div>
@@ -318,14 +321,14 @@ $jsHash = file_exists('assets/js/app.min.js') ? filemtime('assets/js/app.min.js'
         <div class="container nav-content">
             <button class="mobile-menu-btn" id="mobile-menu-toggle" aria-label="Toggle navigation menu" aria-expanded="false">☰</button>
             <ul class="nav-links" id="nav-links-menu">
-                <li><a href="index.php" class="nav-item <?php echo ($currentCat === '' && $searchQuery === '') ? 'active' : ''; ?>">Home</a></li>
+                <li><a href="<?php echo htmlspecialchars($configApp['url']); ?>/" class="nav-item <?php echo ($currentCat === '' && $searchQuery === '') ? 'active' : ''; ?>">Home</a></li>
                 <?php foreach ($allSections as $sec): ?>
-                    <li><a href="index.php?cat=<?php echo $sec['id']; ?>" class="nav-item <?php echo $currentCat === $sec['id'] ? 'active' : ''; ?>"><?php echo htmlspecialchars($sec['title']); ?></a></li>
+                    <li><a href="<?php echo \App\Helpers::getCategoryUrl($sec['id']); ?>" class="nav-item <?php echo $currentCat === $sec['id'] ? 'active' : ''; ?>"><?php echo htmlspecialchars($sec['title']); ?></a></li>
                 <?php endforeach; ?>
-                <li><a href="admin/login.php" class="nav-item"><i class="fas fa-user-shield"></i> Admin Panel</a></li>
+                <li><a href="<?php echo htmlspecialchars($configApp['url']); ?>/admin/login.php" class="nav-item"><i class="fas fa-user-shield"></i> Admin Panel</a></li>
             </ul>
             <div class="nav-right-controls">
-                <form class="search-box" method="GET" action="index.php" role="search">
+                <form class="search-box" method="GET" action="<?php echo htmlspecialchars($configApp['url']); ?>/index.php" role="search">
                     <input type="text" name="q" placeholder="Search news..." class="search-input" id="search-bar" value="<?php echo htmlspecialchars($searchQuery); ?>" aria-label="Search articles">
                     <button type="submit" class="search-btn" id="search-button" aria-label="Submit search"><i class="fas fa-search"></i></button>
                 </form>
@@ -342,9 +345,9 @@ $jsHash = file_exists('assets/js/app.min.js') ? filemtime('assets/js/app.min.js'
 
         <!-- Category Slider Pills -->
         <div class="category-pills" id="category-pills-bar">
-            <a href="index.php" class="pill <?php echo $currentCat === '' ? 'active' : ''; ?>">All News</a>
+            <a href="<?php echo htmlspecialchars($configApp['url']); ?>/" class="pill <?php echo $currentCat === '' ? 'active' : ''; ?>">All News</a>
             <?php foreach ($allSections as $sec): ?>
-                <a href="index.php?cat=<?php echo $sec['id']; ?>" class="pill <?php echo $currentCat === $sec['id'] ? 'active' : ''; ?>"><?php echo htmlspecialchars($sec['title']); ?></a>
+                <a href="<?php echo \App\Helpers::getCategoryUrl($sec['id']); ?>" class="pill <?php echo $currentCat === $sec['id'] ? 'active' : ''; ?>"><?php echo htmlspecialchars($sec['title']); ?></a>
             <?php endforeach; ?>
         </div>
 
@@ -408,7 +411,7 @@ $jsHash = file_exists('assets/js/app.min.js') ? filemtime('assets/js/app.min.js'
                                     <p class="featured-summary"><?php echo htmlspecialchars($featuredStory['summary']); ?></p>
                                 </div>
                                 <div class="card-footer">
-                                    <a href="news-detail.php?id=<?php echo $featuredStory['id']; ?>" class="read-more-btn">Read Full Story <i class="fas fa-arrow-right"></i></a>
+                                    <a href="<?php echo \App\Helpers::getNewsUrl($featuredStory['id'], $featuredStory['title']); ?>" class="read-more-btn">Read Full Story <i class="fas fa-arrow-right"></i></a>
                                 </div>
                             </div>
                         </div>
@@ -423,7 +426,7 @@ $jsHash = file_exists('assets/js/app.min.js') ? filemtime('assets/js/app.min.js'
                             <p style="color:var(--text-muted); font-size:0.9rem;">No trending stories.</p>
                         <?php else: ?>
                             <?php foreach ($trendingList as $trend): ?>
-                                <a href="news-detail.php?id=<?php echo $trend['id']; ?>" class="trending-item">
+                                <a href="<?php echo \App\Helpers::getNewsUrl($trend['id'], $trend['title']); ?>" class="trending-item">
                                     <img src="<?php echo htmlspecialchars($trend['image_path']); ?>" alt="Trending thumbnail" style="width: 80px; height: 60px; object-fit: cover; border-radius: 4px; flex-shrink:0;" onerror="this.src='https://via.placeholder.com/80x60?text=News'">
                                     <div class="trend-content">
                                         <h4 class="trend-title" style="font-size:0.9rem; font-weight:600; margin:0 0 5px 0; color:var(--text-primary); display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;"><?php echo htmlspecialchars($trend['title']); ?></h4>
@@ -491,7 +494,7 @@ $jsHash = file_exists('assets/js/app.min.js') ? filemtime('assets/js/app.min.js'
                     <!-- Primary embed: Palghar LIVE YouTube Channel playlist -->
                     <iframe
                         id="main-yt-iframe"
-                        src="https://www.youtube.com/embed?listType=user_uploads&list=palgharlivenews&rel=0"
+                        src="https://www.youtube.com/embed/<?php echo htmlspecialchars($mockVideos[0]['youtubeId']); ?>?rel=0"
                         title="Palghar LIVE Video Bulletins"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                         allowfullscreen
@@ -629,7 +632,7 @@ $jsHash = file_exists('assets/js/app.min.js') ? filemtime('assets/js/app.min.js'
         <div class="container footer-content-wrap">
             <div class="footer-grid">
                 <div class="footer-about">
-                    <img src="assets/images/WhatsApp Image 2026-06-29 at 2.29.31 PM.jpeg" alt="Footer Logo" class="footer-logo" onerror="this.src='https://via.placeholder.com/150x70?text=PALGHAR+LIVE'">
+                    <img src="<?php echo htmlspecialchars($configApp['url']); ?>/assets/images/WhatsApp Image 2026-06-29 at 2.29.31 PM.jpeg" alt="Footer Logo" class="footer-logo" onerror="this.src='https://via.placeholder.com/150x70?text=PALGHAR+LIVE'">
                     <p>Palghar district's leading digital news channel. Committed to truth and representing the issues of the common public under our motto "With Truth, With Public".</p>
                     <div style="display: flex; gap: 10px;">
                         <a href="<?php echo htmlspecialchars($configSeo['facebook_url']); ?>" target="_blank" style="color: var(--accent);" aria-label="Facebook"><i class="fab fa-facebook-square fa-2x"></i></a>
@@ -659,8 +662,8 @@ $jsHash = file_exists('assets/js/app.min.js') ? filemtime('assets/js/app.min.js'
     </button>
 
     <!-- Unified dynamic JS bundles -->
-    <script src="assets/js/app.min.js?v=<?php echo $jsHash; ?>" defer></script>
-    <script src="assets/js/index_page.js?v=<?php echo $jsHash; ?>" defer></script>
+    <script src="<?php echo htmlspecialchars($configApp['url']); ?>/assets/js/app.min.js?v=<?php echo $jsHash; ?>" defer></script>
+    <script src="<?php echo htmlspecialchars($configApp['url']); ?>/assets/js/index_page.js?v=<?php echo $jsHash; ?>" defer></script>
 
     <script nonce="<?php echo \App\Middleware\SecurityHeaders::getNonce(); ?>">
         // progressive enhancement: disable fallback layout pagination if JS is active

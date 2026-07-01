@@ -65,11 +65,52 @@ class Helpers
     }
 
     /**
-     * Retrieve mock dynamic weather value based on hour of the day
+     * Retrieve dynamic weather value from Open-Meteo API (with 30-min file caching fallback)
      */
     public static function getWeatherTemp(): string
     {
-        return (28 + (date('H') % 5)) . "°C";
+        $cacheFile = dirname(__DIR__) . '/logs/weather_cache.json';
+        $cacheTime = 1800; // 30 minutes
+        $fallbackTemp = "29°C";
+
+        // Check if cached file is valid
+        if (file_exists($cacheFile) && (time() - filemtime($cacheFile)) < $cacheTime) {
+            $cachedData = json_decode(@file_get_contents($cacheFile), true);
+            if (!empty($cachedData['temp'])) {
+                return $cachedData['temp'];
+            }
+        }
+
+        // Fetch fresh weather from API
+        $url = 'https://api.open-meteo.com/v1/forecast?latitude=19.6969&longitude=72.7654&current=temperature_2m';
+        
+        $ctx = stream_context_create([
+            'http' => [
+                'timeout' => 3, // 3 seconds timeout
+                'header' => "User-Agent: PalgharLiveNews/1.0\r\n"
+            ]
+        ]);
+
+        $response = @file_get_contents($url, false, $ctx);
+        if ($response !== false) {
+            $data = json_decode($response, true);
+            if (isset($data['current']['temperature_2m'])) {
+                $tempValue = round($data['current']['temperature_2m']) . "°C";
+                // Write to cache file
+                @file_put_contents($cacheFile, json_encode(['temp' => $tempValue, 'updated_at' => time()]));
+                return $tempValue;
+            }
+        }
+
+        // If API fails but we have stale cache, return stale cache as secondary fallback
+        if (file_exists($cacheFile)) {
+            $cachedData = json_decode(@file_get_contents($cacheFile), true);
+            if (!empty($cachedData['temp'])) {
+                return $cachedData['temp'];
+            }
+        }
+
+        return $fallbackTemp;
     }
 
     /**
@@ -80,5 +121,37 @@ class Helpers
         $wordCount = str_word_count(strip_tags($text));
         $minutes = ceil($wordCount / 200);
         return $minutes . ' min read';
+    }
+
+    /**
+     * Generate URL slug helper
+     */
+    public static function slugify(string $text): string
+    {
+        $text = preg_replace('~[^\pL\d]+~u', '-', $text);
+        $text = iconv('utf-8', 'us-ascii//TRANSLIT', $text);
+        $text = preg_replace('~[^-\w]+~', '', $text);
+        $text = trim($text, '-');
+        $text = preg_replace('~-+~', '-', $text);
+        $text = strtolower($text);
+        return empty($text) ? 'article' : $text;
+    }
+
+    /**
+     * Get absolute clean news article URL
+     */
+    public static function getNewsUrl(int|string $id, string $title): string
+    {
+        $configApp = require __DIR__ . '/Config/app.php';
+        return rtrim($configApp['url'] ?? '', '/') . '/news/' . $id . '/' . self::slugify($title);
+    }
+
+    /**
+     * Get absolute clean category URL
+     */
+    public static function getCategoryUrl(string $catId): string
+    {
+        $configApp = require __DIR__ . '/Config/app.php';
+        return rtrim($configApp['url'] ?? '', '/') . '/category/' . urlencode($catId);
     }
 }

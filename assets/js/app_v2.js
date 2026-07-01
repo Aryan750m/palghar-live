@@ -56,13 +56,20 @@ function initThemeManager() {
 
 function applyTheme(theme) {
     const btn = document.getElementById('theme-toggle');
+    const rootEl = document.documentElement;
+    const bodyEl = document.body;
+    
     if (theme === 'system') {
-        document.body.setAttribute('data-theme-mode', 'system');
-        document.body.removeAttribute('data-theme');
+        bodyEl.setAttribute('data-theme-mode', 'system');
+        bodyEl.removeAttribute('data-theme');
+        rootEl.setAttribute('data-theme-mode', 'system');
+        rootEl.removeAttribute('data-theme');
         if (btn) btn.innerHTML = '<i class="fas fa-desktop"></i>';
     } else {
-        document.body.setAttribute('data-theme-mode', 'fixed');
-        document.body.setAttribute('data-theme', theme);
+        bodyEl.setAttribute('data-theme-mode', 'fixed');
+        bodyEl.setAttribute('data-theme', theme);
+        rootEl.setAttribute('data-theme-mode', 'fixed');
+        rootEl.setAttribute('data-theme', theme);
         if (btn) btn.innerHTML = theme === 'dark' ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
     }
 }
@@ -148,10 +155,9 @@ function setupScrollToTop() {
     });
 }
 
-// Service Worker PWA registration
 function registerServiceWorker() {
     if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/service-worker.js')
+        navigator.serviceWorker.register((window.APP_URL || '') + '/service-worker.js')
             .then(() => console.log('Palghar LIVE Service Worker registered.'))
             .catch(err => console.log('SW registration failure:', err));
     }

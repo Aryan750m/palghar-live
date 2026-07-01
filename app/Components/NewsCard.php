@@ -21,7 +21,7 @@ class NewsCard
         $formattedDate = Helpers::formatDate($article['date_published']);
         $readTime = Helpers::getReadingTime($article['content']);
 
-        $articleUrl = 'news/' . $article['id'] . '/' . self::slugify($article['title']);
+        $articleUrl = Helpers::getNewsUrl($article['id'], $article['title']);
         $imageHtml = self::renderResponsiveImage($article['image_path'], $article['title'], $isPriority);
 
         return sprintf(

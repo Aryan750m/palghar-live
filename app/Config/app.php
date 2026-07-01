@@ -8,7 +8,11 @@ return [
     'timezone' => 'Asia/Kolkata',
     'debug' => getenv('APP_DEBUG') === 'true' || getenv('APP_DEBUG') === '1',
     'env' => getenv('APP_ENV') ?: 'production',
-    'url' => getenv('APP_URL') ?: 'https://palghar-live.onrender.com',
+    'url' => getenv('APP_URL') ?: (
+        isset($_SERVER['HTTP_HOST'])
+        ? ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . (str_contains($_SERVER['SCRIPT_NAME'] ?? '', '/news-channel') ? '/news-channel' : ''))
+        : 'https://palghar-live.onrender.com'
+    ),
 
     // Core directories
     'paths' => [

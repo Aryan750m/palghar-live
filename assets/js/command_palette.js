@@ -112,7 +112,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function fetchResults(query) {
         // Fetch matching articles from our AJAX search endpoint
-        fetch(`search.php?q=${encodeURIComponent(query)}&ajax=1`)
+        fetch((window.APP_URL || '') + `/search.php?q=${encodeURIComponent(query)}&ajax=1`)
             .then(res => res.json())
             .then(data => {
                 resultsContainer.innerHTML = '';
@@ -134,7 +134,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     `;
                     
                     item.addEventListener('click', () => {
-                        window.location.href = `news/${article.id}/${slugify(article.title)}`;
+                        window.location.href = (window.APP_URL || '') + `/news/${article.id}/${slugify(article.title)}`;
                     });
                     
                     resultsContainer.appendChild(item);

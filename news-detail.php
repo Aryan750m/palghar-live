@@ -117,11 +117,15 @@ $jsHash = file_exists('assets/js/app.min.js') ? filemtime('assets/js/app.min.js'
     <?php echo \App\Services\SEOManager::renderMetaTags($pageTitle, $pageDesc, null, $ogImage); ?>
     
     <!-- Favicon Links -->
-    <link rel="icon" type="image/jpeg" href="assets/images/WhatsApp Image 2026-06-29 at 2.29.31 PM.jpeg">
-    <link rel="shortcut icon" type="image/jpeg" href="assets/images/WhatsApp Image 2026-06-29 at 2.29.31 PM.jpeg">
+    <script nonce="<?php echo \App\Middleware\SecurityHeaders::getNonce(); ?>">
+        window.APP_URL = "<?php echo htmlspecialchars($configApp['url']); ?>";
+    </script>
+
+    <link rel="icon" type="image/jpeg" href="<?php echo htmlspecialchars($configApp['url']); ?>/assets/images/WhatsApp Image 2026-06-29 at 2.29.31 PM.jpeg">
+    <link rel="shortcut icon" type="image/jpeg" href="<?php echo htmlspecialchars($configApp['url']); ?>/assets/images/WhatsApp Image 2026-06-29 at 2.29.31 PM.jpeg">
     
     <!-- PWA Manifest -->
-    <link rel="manifest" href="manifest.json">
+    <link rel="manifest" href="<?php echo htmlspecialchars($configApp['url']); ?>/manifest.json">
     <meta name="theme-color" content="#E31B23">
     
     <!-- CDNs and Fonts Optimizations (preconnect headers) -->
@@ -130,11 +134,10 @@ $jsHash = file_exists('assets/js/app.min.js') ? filemtime('assets/js/app.min.js'
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     
     <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
-    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <!-- Production CSS bundles -->
-    <link rel="stylesheet" href="assets/css/style.min.css?v=<?php echo $cssHash; ?>">
+    <link rel="stylesheet" href="<?php echo htmlspecialchars($configApp['url']); ?>/assets/css/style.min.css?v=<?php echo $cssHash; ?>">
     
     <!-- Rich structured data models schemas -->
     <?php 
@@ -155,7 +158,7 @@ $jsHash = file_exists('assets/js/app.min.js') ? filemtime('assets/js/app.min.js'
     }
     ?>
     <!-- Anti-FOUC: Apply theme immediately to prevent flash -->
-    <script>
+    <script nonce="<?php echo \App\Middleware\SecurityHeaders::getNonce(); ?>">
         (function(){
             function getCookieValue(name) {
                 var match = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
@@ -204,7 +207,7 @@ $jsHash = file_exists('assets/js/app.min.js') ? filemtime('assets/js/app.min.js'
         <div class="container header-content">
             <div class="logo-container">
                 <a href="index.php" style="display: flex; align-items: center; gap: 15px; text-decoration: none;" aria-label="Palghar LIVE homepage">
-                    <img src="assets/images/WhatsApp Image 2026-06-29 at 2.29.31 PM.jpeg" alt="Palghar LIVE logo" class="site-logo" onerror="this.src='https://via.placeholder.com/150x70?text=PALGHAR+LIVE'">
+                    <img src="<?php echo htmlspecialchars($configApp['url']); ?>/assets/images/WhatsApp Image 2026-06-29 at 2.29.31 PM.jpeg" alt="Palghar LIVE logo" class="site-logo" onerror="this.src='https://via.placeholder.com/150x70?text=PALGHAR+LIVE'">
                     <div class="brand-details">
                         <span class="brand-title" style="font-size: 2.2rem; font-weight:800; color:var(--secondary); display:block; line-height:1;">Palghar <span style="color:var(--primary);">LIVE</span></span>
                         <p class="brand-slogan">The Strong Voice of the Common People</p>
@@ -224,11 +227,11 @@ $jsHash = file_exists('assets/js/app.min.js') ? filemtime('assets/js/app.min.js'
         <div class="container nav-content">
             <button class="mobile-menu-btn" id="mobile-menu-toggle" aria-label="Toggle navigation menu" aria-expanded="false">☰</button>
             <ul class="nav-links" id="nav-links-menu">
-                <li><a href="index.php" class="nav-item">Home</a></li>
+                <li><a href="<?php echo htmlspecialchars($configApp['url']); ?>/" class="nav-item">Home</a></li>
                 <?php foreach ($allSections as $sec): ?>
-                    <li><a href="index.php?cat=<?php echo $sec['id']; ?>" class="nav-item <?php echo ($article && $article['category'] === $sec['id']) ? 'active' : ''; ?>"><?php echo htmlspecialchars($sec['title']); ?></a></li>
+                    <li><a href="<?php echo \App\Helpers::getCategoryUrl($sec['id']); ?>" class="nav-item <?php echo ($article && $article['category'] === $sec['id']) ? 'active' : ''; ?>"><?php echo htmlspecialchars($sec['title']); ?></a></li>
                 <?php endforeach; ?>
-                <li><a href="admin/login.php" class="nav-item"><i class="fas fa-user-shield"></i> Admin Panel</a></li>
+                <li><a href="<?php echo htmlspecialchars($configApp['url']); ?>/admin/login.php" class="nav-item"><i class="fas fa-user-shield"></i> Admin Panel</a></li>
             </ul>
             <div class="nav-right-controls">
                 <button class="theme-toggle-btn" id="theme-toggle" aria-label="Switch color theme">🌙</button>
@@ -314,7 +317,7 @@ $jsHash = file_exists('assets/js/app.min.js') ? filemtime('assets/js/app.min.js'
                             </div>
                         <?php endif; ?>
 
-                        <form class="comment-form" id="article-comment-form" method="POST" action="news-detail.php?id=<?php echo $articleId; ?>">
+                        <form class="comment-form" id="article-comment-form" method="POST" action="<?php echo htmlspecialchars($configApp['url']); ?>/news-detail.php?id=<?php echo $articleId; ?>">
                             <input type="hidden" name="action" value="submit_comment">
                             <input type="hidden" name="news_id" value="<?php echo $articleId; ?>">
                             <?php echo \App\Middleware\CSRFCheck::getInputField(); ?>
@@ -355,7 +358,7 @@ $jsHash = file_exists('assets/js/app.min.js') ? filemtime('assets/js/app.min.js'
                     <h3 class="sidebar-header" style="border-bottom-color: var(--primary); font-size: 1.1rem; padding-bottom: 5px; margin-bottom: 15px;"><i class="far fa-newspaper"></i> Other Major Stories</h3>
                     <div id="related-sidebar-container" style="display: flex; flex-direction: column; gap: 15px;">
                         <?php foreach ($relatedArticles as $rel): ?>
-                            <a href="news-detail.php?id=<?php echo $rel['id']; ?>" class="trending-item">
+                            <a href="<?php echo \App\Helpers::getNewsUrl($rel['id'], $rel['title']); ?>" class="trending-item">
                                 <img src="<?php echo htmlspecialchars($rel['image_path']); ?>" alt="Related story cover image" style="width: 70px; height: 50px; object-fit: cover; border-radius: 4px; flex-shrink:0;" onerror="this.src='https://via.placeholder.com/70x50?text=News'">
                                 <div class="trend-content">
                                     <h4 class="trend-title" style="font-size:0.85rem; font-weight:600; margin:0; color:var(--text-primary); display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;"><?php echo htmlspecialchars($rel['title']); ?></h4>
@@ -403,8 +406,8 @@ $jsHash = file_exists('assets/js/app.min.js') ? filemtime('assets/js/app.min.js'
     </button>
 
     <!-- Unified dynamic JS bundles -->
-    <script src="assets/js/app.min.js?v=<?php echo $jsHash; ?>" defer></script>
-    <script src="assets/js/news_detail_page.js?v=<?php echo $jsHash; ?>" defer></script>
+    <script src="<?php echo htmlspecialchars($configApp['url']); ?>/assets/js/app.min.js?v=<?php echo $jsHash; ?>" defer></script>
+    <script src="<?php echo htmlspecialchars($configApp['url']); ?>/assets/js/news_detail_page.js?v=<?php echo $jsHash; ?>" defer></script>
 </body>
 </html>
 <?php

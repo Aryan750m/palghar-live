@@ -15,6 +15,13 @@ document.addEventListener('DOMContentLoaded', () => {
     if (newsGrid && loadMoreTrigger) {
         initInfiniteScroll(newsGrid, loadMoreTrigger);
     }
+
+    // 3. Initialise Video Playlist Player
+    const playlistContainer = document.getElementById('video-playlist-container');
+    const mainIframe = document.getElementById('main-yt-iframe');
+    if (playlistContainer && mainIframe) {
+        initVideoPlaylist(playlistContainer, mainIframe);
+    }
 });
 
 // Carousel Class
@@ -117,7 +124,7 @@ function initInfiniteScroll(grid, trigger) {
         // Show skeleton loading placeholders
         const skeletons = showSkeletons();
         
-        const url = `index.php?page=${page}&cat=${encodeURIComponent(activeCat)}&q=${encodeURIComponent(activeQuery)}&ajax=1`;
+        const url = (window.APP_URL || '') + `/index.php?page=${page}&cat=${encodeURIComponent(activeCat)}&q=${encodeURIComponent(activeQuery)}&ajax=1`;
         
         fetch(url)
             .then(res => {
@@ -186,4 +193,29 @@ function initInfiniteScroll(grid, trigger) {
         }
         return list;
     }
+}
+
+// Video Playlist interaction logic
+function initVideoPlaylist(playlist, iframe) {
+    const items = playlist.querySelectorAll('.playlist-item');
+    items.forEach(item => {
+        const handler = () => {
+            const ytId = item.getAttribute('data-youtube-id');
+            if (ytId) {
+                iframe.src = `https://www.youtube.com/embed/${ytId}?autoplay=1&rel=0`;
+                
+                // Toggle active state
+                items.forEach(el => el.classList.remove('active'));
+                item.classList.add('active');
+            }
+        };
+        
+        item.addEventListener('click', handler);
+        item.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                handler();
+            }
+        });
+    });
 }
