@@ -30,4 +30,8 @@ composer.phar
 composer.lock
 
 # Node modules (not used but defensive)
+# Node modules (not used but defensive)
 node_modules/
+
+# Logs directory
+logs/
