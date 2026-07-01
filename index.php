@@ -235,6 +235,25 @@ $jsHash = file_exists('assets/js/app.min.js') ? filemtime('assets/js/app.min.js'
     }
     echo \App\Services\SEOManager::renderSchema('Breadcrumb', $crumbs);
     ?>
+    <!-- Anti-FOUC: Apply theme immediately to prevent flash. Must be inline, before CSS. -->
+    <script>
+        (function(){
+            function getCookieValue(name) {
+                var match = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
+                return match ? match.pop() : null;
+            }
+            var t = getCookieValue('theme_preference') || 'system';
+            if (t === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                document.documentElement.setAttribute('data-theme-mode', 'fixed');
+            } else if (t === 'light') {
+                document.documentElement.setAttribute('data-theme', 'light');
+                document.documentElement.setAttribute('data-theme-mode', 'fixed');
+            } else {
+                document.documentElement.setAttribute('data-theme-mode', 'system');
+            }
+        })();
+    </script>
 </head>
 <body <?php echo \App\Services\ThemeManager::getBodyThemeAttributes(); ?>>
 
@@ -469,9 +488,16 @@ $jsHash = file_exists('assets/js/app.min.js') ? filemtime('assets/js/app.min.js'
             <h2 class="video-title"><i class="fab fa-youtube" style="color: #FF0000;"></i> Video Bulletins</h2>
             <div class="video-grid-layout">
                 <div class="main-video-player" id="main-video-player-container">
-                    <iframe src="https://www.youtube.com/embed/GPd0niZQMme" title="YouTube video player"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowfullscreen></iframe>
+                    <!-- Primary embed: Palghar LIVE YouTube Channel playlist -->
+                    <iframe
+                        id="main-yt-iframe"
+                        src="https://www.youtube.com/embed?listType=user_uploads&list=palgharlivenews&rel=0"
+                        title="Palghar LIVE Video Bulletins"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowfullscreen
+                        loading="lazy"
+                        style="width:100%;height:100%;border:none;">
+                    </iframe>
                 </div>
                 <div class="video-playlist" id="video-playlist-container">
                     <?php foreach ($mockVideos as $vid): ?>
@@ -483,6 +509,9 @@ $jsHash = file_exists('assets/js/app.min.js') ? filemtime('assets/js/app.min.js'
                             </div>
                         </div>
                     <?php endforeach; ?>
+                    <a href="https://www.youtube.com/@palgharlivenews" target="_blank" class="video-fallback-btn" style="margin-top: 10px; border-radius: 8px; justify-content: center;">
+                        <i class="fab fa-youtube"></i> Visit Full Channel
+                    </a>
                 </div>
             </div>
         </section>

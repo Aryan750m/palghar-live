@@ -154,6 +154,25 @@ $jsHash = file_exists('assets/js/app.min.js') ? filemtime('assets/js/app.min.js'
         echo \App\Services\SEOManager::renderSchema('NewsArticle', $article);
     }
     ?>
+    <!-- Anti-FOUC: Apply theme immediately to prevent flash -->
+    <script>
+        (function(){
+            function getCookieValue(name) {
+                var match = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
+                return match ? match.pop() : null;
+            }
+            var t = getCookieValue('theme_preference') || 'system';
+            if (t === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                document.documentElement.setAttribute('data-theme-mode', 'fixed');
+            } else if (t === 'light') {
+                document.documentElement.setAttribute('data-theme', 'light');
+                document.documentElement.setAttribute('data-theme-mode', 'fixed');
+            } else {
+                document.documentElement.setAttribute('data-theme-mode', 'system');
+            }
+        })();
+    </script>
 </head>
 <body <?php echo \App\Services\ThemeManager::getBodyThemeAttributes(); ?> <?php echo $article ? 'data-article-id="' . $article['id'] . '" data-article-title="' . htmlspecialchars($article['title']) . '"' : ''; ?>>
 
