@@ -10,7 +10,14 @@ return [
     'env' => getenv('APP_ENV') ?: 'production',
     'url' => getenv('APP_URL') ?: (
         isset($_SERVER['HTTP_HOST'])
-        ? ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . (str_contains($_SERVER['SCRIPT_NAME'] ?? '', '/news-channel') ? '/news-channel' : ''))
+        ? (
+            (
+                (isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] === 'on' || $_SERVER['HTTPS'] == 1)) ||
+                (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https')
+                ? 'https' : 'http'
+            )
+            . '://' . $_SERVER['HTTP_HOST'] . (str_contains($_SERVER['SCRIPT_NAME'] ?? '', '/news-channel') ? '/news-channel' : '')
+          )
         : 'https://palghar-live.onrender.com'
     ),
 
