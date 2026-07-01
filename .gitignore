@@ -23,3 +23,11 @@ Thumbs.db
 # Editor / IDE
 .vscode/
 .idea/
+
+# Composer dependencies (install on server via composer install)
+vendor/
+composer.phar
+composer.lock
+
+# Node modules (not used but defensive)
+node_modules/
